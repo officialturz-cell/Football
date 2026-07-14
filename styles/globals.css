@@ -1,0 +1,24 @@
+/* global styles and Tailwind base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0b0f14;
+}
+
+html, body {
+  height: 100%;
+}
+
+/* custom colors used in components */
+.bg-gray-950 { background-color: #05060a; }
+.bg-gray-900 { background-color: #0b0f14; }
+.bg-gray-900\/30 { background-color: rgba(11,15,20,0.30); }
+.bg-gray-850 { background-color: #0f1720; }
+.border-gray-700 { border-color: #1f2937; }
+.text-gray-100 { color: #f3f4f6; }
+.text-gray-300 { color: #d1d5db; }
+.text-gray-400 { color: #9ca3af; }
+.text-gray-500 { color: #6b7280; }
+.text-gray-200 { color: #e5e7eb; }

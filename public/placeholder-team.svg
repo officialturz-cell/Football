@@ -1,0 +1,5 @@
+/* Placeholder svg used for teams */
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none">
+  <rect width="120" height="120" rx="16" fill="#111827" />
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9CA3AF" font-size="18">Team</text>
+</svg>
