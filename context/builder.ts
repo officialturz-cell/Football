@@ -30,13 +30,29 @@ export class ContextBuilder {
       standings = s ?? undefined
     }
 
-    // recent form - football-data.org doesn't provide a ready-made recent form endpoint; we return null
-    const recentForm = undefined
+    // Use builders to enrich context (recent form, head-to-head, league context)
+    const recentFormBuilder = (await import('@/context/RecentFormBuilder')).recentFormBuilder
+    const headToHeadBuilder = (await import('@/context/HeadToHeadBuilder')).headToHeadBuilder
+    const leagueContextBuilder = (await import('@/context/LeagueContextBuilder')).leagueContextBuilder
+
+    const recentForm = {
+      home: homeTeamId ? await recentFormBuilder.buildForTeam(String(homeTeamId)) : undefined,
+      away: awayTeamId ? await recentFormBuilder.buildForTeam(String(awayTeamId)) : undefined
+    }
+
+    const headToHead = homeTeamId && awayTeamId ? await headToHeadBuilder.build(String(homeTeamId), String(awayTeamId)) : undefined
+
+    const leagueContext = competition?.id
+      ? {
+          home: homeTeamId ? await leagueContextBuilder.buildForTeam(String(competition.id), String(homeTeamId)) : undefined,
+          away: awayTeamId ? await leagueContextBuilder.buildForTeam(String(competition.id), String(awayTeamId)) : undefined
+        }
+      : undefined
 
     // statistics - may not be present; set null if not available
     const statistics = match?.score ?? undefined
 
-    // lineups, injuries, timeline, playerRatings - football-data.org v4 provides limited match events; try to map events
+    // timeline
     const timeline = (match?.matchday || match?.events) ? (match?.events ?? null) : undefined
 
     const normalized: MatchContext = {
@@ -80,7 +96,7 @@ export class ContextBuilder {
                 : undefined
           }
         : undefined,
-      recentForm: undefined,
+      recentForm: recentForm.home || recentForm.away ? recentForm as any : undefined,
       statistics: statistics ? { score: statistics } : undefined,
       lineups: undefined,
       injuries: undefined,
@@ -89,7 +105,9 @@ export class ContextBuilder {
       referee: match?.referees && match.referees.length ? { name: match.referees[0].name } : undefined,
       venue: match?.venue ? { name: match.venue } : undefined,
       weather: undefined,
-      analysisHistory: undefined
+      analysisHistory: undefined,
+      headToHead: headToHead ?? undefined,
+      leagueContext: leagueContext ?? undefined
     }
 
     return normalized
